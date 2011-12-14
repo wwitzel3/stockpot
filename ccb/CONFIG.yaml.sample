@@ -1,0 +1,18 @@
+Store:
+    Type: MongoDB
+    DB: ccb
+Google:
+    Consumer Key: communitycookbook.net
+    Consumer Secret: CzVZHn3IswIxUBbctIUlMHk2
+Facebook:
+    API Key: 286430991393260
+    Application Secret: 4b20c300697bd00908b663bd20694fb3
+    Application ID: 286430991393260
+Twitter:
+    Consumer Key: xJEOyAoIUlp390YMAPwMw
+    Consumer Secret: DkoGRJBlqepl9SFOhVVtPqRDjA2jvQtPfzpn0uhrJM
+OpenID:
+    Realm: http://communitycookbook.net:6543
+    Endpoint Regex: http://communitycookbook.net
+OpenID Store:
+    Type: openid.store.memstore:MemoryStore
