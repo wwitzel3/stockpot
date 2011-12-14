@@ -16,3 +16,4 @@ dist/*
 docs/_build/*
 CONFIG.yaml
 *.ini
+*.swp

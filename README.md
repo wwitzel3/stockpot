@@ -1,12 +1,10 @@
 Overview
-========
-
+--------
 stockpot is the opensource code base for the website Community Cookbook (http://communitycookbook.net).
 The site is built using Pyramid with MongoDB and Ming.
 
 Installing
-==========
-
+----------
 You will need a functioning MongoDB installation for your platform. See [http://www.mongodb.org/display/DOCS/Quickstart]
 
 Clone the stockpot code repository
@@ -49,7 +47,6 @@ Now you can start the application.
 Visti http://localhost:6543 in your browser.
 
 Feedback
-========
-
+--------
 You can send questions or comments to <wayne@pieceofpy.com>.
 
