@@ -17,21 +17,20 @@ import ccb.models as M
 def index(request):
     return dict(user_id=unauthenticated_userid(request))
 
-@view_config(route_name='login')
+@view_config(route_name='login', request_param='token')
 def login(request):
-    if 'token' in request.params:
-        token = request.params.get('token')
-        storage = M.Velruse.query.get(key=token)
-        values = pickle.loads(storage.value)
-        user = M.User.find(**values)
+    token = request.params.get('token')
+    storage = M.Velruse.query.get(key=token)
+    values = pickle.loads(storage.value)
+    user = M.User.find(**values)
 
-        if not user:
-            user = M.User(**values)
-            M.DBSession.flush()
+    if not user:
+        user = M.User(**values)
+        M.DBSession.flush()
 
-        headers = remember(request, str(user._id))
-        return HTTPFound(location=route_url('index', request),
-                         headers=headers)
+    headers = remember(request, str(user._id))
+    return HTTPFound(location=route_url('index', request),
+                     headers=headers)
 
 @view_config(route_name='logout')
 def logout(request):
