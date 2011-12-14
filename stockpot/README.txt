@@ -1,4 +1,0 @@
-stockpot README
-
-
-

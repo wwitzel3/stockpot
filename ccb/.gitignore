@@ -1,6 +1,7 @@
 *.db
 *.egg-info
 *-py2.6.egg
+*-py2.7.egg
 *.log
 *.pyc
 */.coverage
@@ -14,5 +15,6 @@ install/*
 build/*
 dist/*
 docs/_build/*
-CONFIG.yaml
-*.ini
+data/*
+data
+production.ini
