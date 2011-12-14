@@ -40,9 +40,10 @@ class User(MappedClass):
 
         profile = kwargs.get('profile')
         provider = kwargs.get('providerName') or profile.get('providerName')
-        if provider == 'Twitter' or provider == 'Facebook' or provider == 'Google':
-            identifier_hash = md5(profile.get('identifier')).hexdigest()
-            return identifier_hash
+        providers = ['Twitter', 'Google', 'Facebook']
+        if provider in providers:
+            _identifier = md5(profile.get('identifier')).hexdigest()
+            return _identifier
         else:
             raise HTTPForbidden
 
