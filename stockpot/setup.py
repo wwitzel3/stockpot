@@ -13,7 +13,7 @@ requires = [
     'mako',
     'pyramid_tm',
     'pyramid_debugtoolbar',
-    'pymongo>=1.9,<=2.0',
+    'pymongo>=1.9,<2.0',
     'Ming',
     'Paste',
     'PasteDeploy',
