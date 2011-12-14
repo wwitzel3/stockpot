@@ -4,6 +4,7 @@ except ImportError:
     import pickle
 
 from pyramid.httpexceptions import HTTPFound
+from pyramid.httpexceptions import HTTPForbidden
 from pyramid.security import forget
 from pyramid.security import remember
 from pyramid.security import unauthenticated_userid
@@ -37,6 +38,10 @@ def logout(request):
     headers = forget(request)
     return HTTPFound(location=route_url('index', request),
                      headers=headers)
+
+@view_config(context=HTTPForbidden, renderer='default/forbidden.mako')
+def forbidden(request):
+    return dict()
 
 def default_routes(config):
     config.add_route('index', '')

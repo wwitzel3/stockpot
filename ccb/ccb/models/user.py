@@ -4,7 +4,7 @@ from ming import schema as S
 from ming.orm import FieldProperty
 from ming.orm.declarative import MappedClass
 
-from pyramid.exceptions import Forbidden
+from pyramid.httpexceptions import HTTPForbidden
 
 from ccb.models import DBSession
 
@@ -36,7 +36,7 @@ class User(MappedClass):
         if the status is not 'ok' or if no known providerName is found
         """
         if not kwargs.get('status') == 'ok':
-            raise Forbidden
+            raise HTTPForbidden
 
         profile = kwargs.get('profile')
         provider = kwargs.get('providerName') or profile.get('providerName')
@@ -44,5 +44,5 @@ class User(MappedClass):
             identifier_hash = md5(profile.get('identifier')).hexdigest()
             return identifier_hash
         else:
-            raise Forbidden
+            raise HTTPForbidden
 

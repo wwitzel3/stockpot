@@ -4,7 +4,7 @@ from pyramid.authentication import AuthTktAuthenticationPolicy
 from pyramid.authorization import ACLAuthorizationPolicy
 
 import ccb.models as M
-from ccb.security import RequestWithDBAttribute
+from ccb.security import RequestWithAttributes
 from ccb.security import groupfinder
 
 from ccb.views.default import default_routes
@@ -17,7 +17,7 @@ def main(global_config, **settings):
 
     config = Configurator(
         settings=settings,
-        request_factory=RequestWithDBAttribute,
+        request_factory=RequestWithAttributes,
         authentication_policy=authn_p,
         authorization_policy=authz_p,
     )
