@@ -48,5 +48,5 @@ Visti http://localhost:6543 in your browser.
 
 Feedback
 --------
-You can send questions or comments to <wayne@pieceofpy.com>.
+You can send questions or comments to <wayne@pieceofpy.com> or use the [discussion forums https://sourceforge.net/p/stockpot/discussion/general/]
 
