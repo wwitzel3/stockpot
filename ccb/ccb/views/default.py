@@ -22,7 +22,7 @@ def login(request):
         token = request.params.get('token')
         storage = M.Velruse.query.get(key=token)
         values = pickle.loads(storage.value)
-
+        print values
         user = M.User.find(**values)
 
         if not user:

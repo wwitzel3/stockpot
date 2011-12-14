@@ -1,3 +1,5 @@
+from hashlib import md5
+
 from ming import schema as S
 from ming.orm import FieldProperty
 from ming.orm.declarative import MappedClass
@@ -13,23 +15,23 @@ class User(MappedClass):
 
     _id = FieldProperty(S.ObjectId)
     display_name = FieldProperty(str)
-    access_token = FieldProperty(str)
+    identifier = FieldProperty(str)
 
     def __init__(self, *args, **kwargs):
-        self.access_token = self.find_access_token(**kwargs)
+        self.identifier = self.find_identifier(**kwargs)
 
     @classmethod
     def find(cls, *arg, **kwargs):
-        """Locate a User record using the access_token from a given
+        """Locate a User record using the identifier from a given
         provider. Note that the same user, using different OAuth accounts
         will end up with an account per provider.
         """
-        access_token = cls.find_access_token(**kwargs)
-        return cls.query.get(access_token=access_token)
+        identifier = cls.find_identifier(**kwargs)
+        return cls.query.get(identifier=identifier)
 
     @classmethod
-    def find_access_token(cls, *arg, **kwargs):
-        """Using the providerNamer name determine which access token to use
+    def find_identifier(cls, *arg, **kwargs):
+        """Using the providerNamer name determine which identifier to use
         This method will raise a pyramid.exceptions.Forbidden exception
         if the status is not 'ok' or if no known providerName is found
         """
@@ -38,12 +40,9 @@ class User(MappedClass):
 
         profile = kwargs.get('profile')
         provider = kwargs.get('providerName') or profile.get('providerName')
-        if provider == 'Twitter':
-            return kwargs.get('credentials').get('oauthAccessToken')[0]
-        elif provider == 'Facebook':
-            return kwargs.get('credentials').get('oauthAccessToken')
-        elif provider == 'Google':
-            return profile.get('identifier')
+        if provider == 'Twitter' or provider == 'Facebook' or provider == 'Google':
+            identifier_hash = md5(profile.get('identifier')).hexdigest()
+            return identifier_hash
         else:
             raise Forbidden
 
