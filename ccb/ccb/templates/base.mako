@@ -59,7 +59,6 @@
 			<div class="span-one-third">
 				<h2>Signup</h2>
 				<p>Signing up is easy, use your existing Google, Twitter, or Facebook account.</p>
-				<p><a class="btn" href="${request.route_url('signup')}">Signup</a></p>
 			<form action="/velruse/google/auth" method="post">
 				<input type="hidden" name="popup_mode" value="popup" />
 				<input type="hidden" name="end_point" value="http://communitycookbook.net:6543/login" />

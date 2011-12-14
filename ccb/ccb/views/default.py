@@ -22,7 +22,6 @@ def login(request):
         token = request.params.get('token')
         storage = M.Velruse.query.get(key=token)
         values = pickle.loads(storage.value)
-        print values
         user = M.User.find(**values)
 
         if not user:
@@ -33,4 +32,14 @@ def login(request):
         return HTTPFound(location=route_url('index', request),
                          headers=headers)
 
+@view_config(route_name='logout')
+def logout(request):
+    headers = forget(request)
+    return HTTPFound(location=route_url('index', request),
+                     headers=headers)
+
+def default_routes(config):
+    config.add_route('index', '')
+    config.add_route('login', '/login')
+    config.add_route('logout', '/logout')
 

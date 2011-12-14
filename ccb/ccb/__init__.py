@@ -7,6 +7,8 @@ import ccb.models as M
 from ccb.security import RequestWithDBAttribute
 from ccb.security import groupfinder
 
+from ccb.views.default import default_routes
+
 def main(global_config, **settings):
     """ This function returns a WSGI application.
     """
@@ -25,11 +27,7 @@ def main(global_config, **settings):
     M.init_mongo(engine=(settings.get('mongo.url'), settings.get('mongo.database')))
 
     ## Routing & Views
-    config.add_route('index', '')
-    config.add_route('sample_instance', '/sample/{id}')
-    config.add_route('sample', '/sample')
-    config.add_route('signup', '/signup')
-    config.add_route('login', '/login')
+    config.include(default_routes, route_prefix='')
 
     config.scan('ccb.views')
     config.add_static_view('static', 'ccb:static')

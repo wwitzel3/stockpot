@@ -12,3 +12,10 @@ class RequestWithDBAttribute(Request):
     def db(self):
         return M.DBSession()
 
+    @reify
+    def user(self):
+        userid = unauthenticated_userid(self)
+        if userid:
+            return M.User.query.get(_id=userid)
+        return None
+
