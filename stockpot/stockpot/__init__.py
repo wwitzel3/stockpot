@@ -3,16 +3,16 @@ from pyramid.events import NewRequest
 from pyramid.authentication import AuthTktAuthenticationPolicy
 from pyramid.authorization import ACLAuthorizationPolicy
 
-import ccb.models as M
-from ccb.security import RequestWithAttributes
-from ccb.security import groupfinder
+import stockpot.models as M
+from stockpot.security import RequestWithAttributes
+from stockpot.security import groupfinder
 
-from ccb.views.default import default_routes
+from stockpot.views.default import default_routes
 
 def main(global_config, **settings):
     """ This function returns a WSGI application.
     """
-    authn_p = AuthTktAuthenticationPolicy(secret='ccb-secret', callback=groupfinder)
+    authn_p = AuthTktAuthenticationPolicy(secret='stockpot-secret', callback=groupfinder)
     authz_p = ACLAuthorizationPolicy()
 
     config = Configurator(
@@ -23,14 +23,14 @@ def main(global_config, **settings):
     )
     config.begin()
     ## Database
-    config.scan('ccb.models')
+    config.scan('stockpot.models')
     M.init_mongo(engine=(settings.get('mongo.url'), settings.get('mongo.database')))
 
     ## Routing & Views
     config.include(default_routes, route_prefix='')
 
-    config.scan('ccb.views')
-    config.add_static_view('static', 'ccb:static')
+    config.scan('stockpot.views')
+    config.add_static_view('static', 'stockpot:static')
 
     config.add_subscriber(close_mongo_db, NewRequest)
     config.end()

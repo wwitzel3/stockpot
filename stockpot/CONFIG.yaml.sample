@@ -1,6 +1,6 @@
 Store:
     Type: MongoDB
-    DB: ccb
+    DB: stockpot
 Google:
     Consumer Key: communitycookbook.net
     Consumer Secret: SECRET

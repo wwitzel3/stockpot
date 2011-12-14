@@ -6,14 +6,14 @@
   <meta name="keywords" content="python web application" />
   <meta name="description" content="pyramid web application" />
 
-  <link rel="stylesheet/less" href="${request.static_url('ccb:static/lib/bootstrap.less')}">
-  <link rel="shortcut icon" href="${request.static_url('ccb:static/favicon.ico')}" />
-  <link rel="stylesheet/less" href="${request.static_url('ccb:static/style.less')}" media="screen" charset="utf-8" />
+  <link rel="stylesheet/less" href="${request.static_url('stockpot:static/lib/bootstrap.less')}">
+  <link rel="shortcut icon" href="${request.static_url('stockpot:static/favicon.ico')}" />
+  <link rel="stylesheet/less" href="${request.static_url('stockpot:static/style.less')}" media="screen" charset="utf-8" />
 
 
   <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-  <script src="${request.static_url('ccb:static/less-1.1.5.min.js')}"></script>
-  <script type="text/javascript" src="${request.static_url('ccb:static/script.js')}"></script>
+  <script src="${request.static_url('stockpot:static/less-1.1.5.min.js')}"></script>
+  <script type="text/javascript" src="${request.static_url('stockpot:static/script.js')}"></script>
 
 </head>
 <body>

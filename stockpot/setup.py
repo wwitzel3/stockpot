@@ -8,12 +8,12 @@ README = open(os.path.join(here, 'README.txt')).read()
 CHANGES = open(os.path.join(here, 'CHANGES.txt')).read()
 
 requires = [
-    'pyramid',
+    'pyramid>=1.3a',
     'transaction',
     'mako',
     'pyramid_tm',
     'pyramid_debugtoolbar',
-    'pymongo',
+    'pymongo>=1.9,<=2.0',
     'Ming',
     'Paste',
     'PasteDeploy',
@@ -26,9 +26,9 @@ tests_require = [
     'mock',
     ]
 
-setup(name='ccb',
+setup(name='stockpot',
       version='0.0',
-      description='ccb',
+      description='stockpot',
       long_description=README + '\n\n' +  CHANGES,
       classifiers=[
         "Programming Language :: Python",
@@ -44,11 +44,11 @@ setup(name='ccb',
       include_package_data=True,
       zip_safe=False,
       tests_require = tests_require,
-      test_suite='ccb',
+      test_suite='stockpot',
       install_requires = requires,
       entry_points = """\
       [paste.app_factory]
-      main = ccb:main
+      main = stockpot:main
       """,
       paster_plugins=['pyramid'],
       )

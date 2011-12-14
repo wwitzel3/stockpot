@@ -3,7 +3,7 @@ from pyramid.request import Request
 from pyramid.security import unauthenticated_userid
 
 import bson
-import ccb.models as M
+import stockpot.models as M
 
 def groupfinder(userid, request):
     userid = bson.ObjectId(userid)

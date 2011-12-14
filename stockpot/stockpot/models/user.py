@@ -6,7 +6,7 @@ from ming.orm.declarative import MappedClass
 
 from pyramid.httpexceptions import HTTPForbidden
 
-from ccb.models import DBSession
+from stockpot.models import DBSession
 
 class User(MappedClass):
     class __mongometa__:

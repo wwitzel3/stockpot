@@ -3,7 +3,7 @@ from datetime import datetime
 from ming import schema as S
 from ming.orm import FieldProperty
 from ming.orm.declarative import MappedClass
-from ccb.models import DBSession
+from stockpot.models import DBSession
 
 class Velruse(MappedClass):
     class __mongometa__:

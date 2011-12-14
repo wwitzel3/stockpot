@@ -11,7 +11,7 @@ from pyramid.security import unauthenticated_userid
 from pyramid.view import view_config
 from pyramid.url import route_url
 
-import ccb.models as M
+import stockpot.models as M
 
 @view_config(route_name='index', renderer='default/index.mako')
 def index(request):
