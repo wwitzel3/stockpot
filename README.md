@@ -1,17 +1,17 @@
 Overview
 --------
-stockpot is the opensource code base for the website Community Cookbook (http://communitycookbook.net).
+stockpot is the opensource code base for the website Community Cookbook (<http://communitycookbook.net>).
 The site is built using Pyramid with MongoDB and Ming.
 
 Installing
 ----------
-You will need a functioning MongoDB installation for your platform. See [http://www.mongodb.org/display/DOCS/Quickstart]
+You will need a functioning MongoDB installation for your platform. See <http://www.mongodb.org/display/DOCS/Quickstart>
 
 Clone the stockpot code repository
 
     git clone git clone https://git.code.sf.net/p/stockpot/code stockpot-code
 
-Now run the setup.py script. It is reccomend you do this inside a virtual environment. See [http://pypi.python.org/pypi/virtualenv]
+Now run the setup.py script. It is reccomend you do this inside a virtual environment. See <http://pypi.python.org/pypi/virtualenv>
 
     python setup.py develop
 
@@ -21,7 +21,7 @@ Once that is completed you will want to edit your development.ini file to reflec
     mongo.database = stockpot
 
 You will also need to open and edit the CONFIG.yaml.sample file. This file should be renamed to CONFIG.yaml so that Velruse
-can properly pickup your OAuth provider credentials. See [http://packages.python.org/velruse/providers.html] for more information
+can properly pickup your OAuth provider credentials. See <http://packages.python.org/velruse/providers.html> for more information
 on configuring providers.
 
     OpenID:
@@ -48,5 +48,5 @@ Visti http://localhost:6543 in your browser.
 
 Feedback
 --------
-You can send questions or comments to <wayne@pieceofpy.com> or use the [discussion forums https://sourceforge.net/p/stockpot/discussion/general/]
+You can send questions or comments to <wayne@pieceofpy.com> or use the [discussion forums](https://sourceforge.net/p/stockpot/discussion/general/)
 
