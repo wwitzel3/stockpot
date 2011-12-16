@@ -26,6 +26,15 @@
 				</ul>
 			</div>
 			<div class="span-one-third">
+			%if userid:
+				<h2>Get Started!</h2>
+				<ul>
+					<li><a href="${request.route_url('user.profile', userid=userid)}">Update profile</a></li>
+					<li>Create a cookbook</li>
+					<li>Add recipes</li>
+					<li>Invite friends</li>
+				</ul>
+			%else:
 				<h2>Signup</h2>
 				<p>Signing up is easy, use your existing Google, Twitter, or Facebook account.</p>
 			<form action="/velruse/google/auth" method="post">
@@ -38,14 +47,14 @@
 			<input type="hidden" name="end_point" value="http://communitycookbook.net:6543/login" />
 			<input type="hidden" name="scope" value="publish_stream,create_event" />
 			<input type="submit" value="Login with Facebook" />
-		</form>
+			</form>
 
-		<form action="/velruse/twitter/auth" method="post">
-<input type="hidden" name="end_point" value="http://communitycookbook.net:6543/login" />
-<input type="submit" value="Login with Twitter" />
-</form>
-
-<p>user_id: ${user_id}</p>
+			<form action="/velruse/twitter/auth" method="post">
+			<input type="hidden" name="end_point" value="http://communitycookbook.net:6543/login" />
+			<input type="submit" value="Login with Twitter" />
+			</form>
+			
+			%endif
 
  			</div>
 		</div>

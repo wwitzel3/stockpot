@@ -8,6 +8,7 @@ from stockpot.security import RequestWithAttributes
 from stockpot.security import groupfinder
 
 from stockpot.views.default import default_routes
+from stockpot.views.user import user_routes
 
 def main(global_config, **settings):
     """ This function returns a WSGI application.
@@ -28,6 +29,7 @@ def main(global_config, **settings):
 
     ## Routing & Views
     config.include(default_routes, route_prefix='')
+    config.include(user_routes, route_prefix='/user')
 
     config.scan('stockpot.views')
     config.add_static_view('static', 'stockpot:static')

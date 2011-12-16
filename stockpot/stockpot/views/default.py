@@ -15,7 +15,7 @@ import stockpot.models as M
 
 @view_config(route_name='index', renderer='default/index.mako')
 def index(request):
-    return dict(user_id=unauthenticated_userid(request))
+    return dict(userid=unauthenticated_userid(request))
 
 @view_config(route_name='login', request_param='token')
 def login(request):
@@ -28,9 +28,15 @@ def login(request):
         user = M.User(**values)
         M.DBSession.flush()
 
+    userid = str(user._id)
     headers = remember(request, str(user._id))
-    return HTTPFound(location=route_url('index', request),
-                     headers=headers)
+
+    if user.username:
+        return HTTPFound(location=route_url('index', request),
+                         headers=headers)
+    else:
+        return HTTPFound(location=route_url('user.profile', request,
+                         userid=userid), headers=headers)
 
 @view_config(route_name='logout')
 def logout(request):

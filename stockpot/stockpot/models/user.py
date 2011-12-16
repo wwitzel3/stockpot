@@ -1,24 +1,37 @@
 from hashlib import md5
 
 from ming import schema as S
-from ming.orm import FieldProperty
+from ming.orm import FieldProperty, FieldPropertyWithMissingNone
 from ming.orm.declarative import MappedClass
 
 from pyramid.httpexceptions import HTTPForbidden
 
 from stockpot.models import DBSession
 
+providers = ['Twitter', 'Google', 'Facebook']
+
 class User(MappedClass):
     class __mongometa__:
         session = DBSession
         name = 'user'
+        custom_indexes = [
+                dict(fields=('identifier',), unique=True, sparse=False), 
+                dict(fields=('email',), unique=True, sparse=True),
+                dict(fields=('username',), unique=True, sparse=True),
+        ]
 
     _id = FieldProperty(S.ObjectId)
-    display_name = FieldProperty(str)
+    username = FieldPropertyWithMissingNone(str, if_missing=S.Missing)
+    email = FieldProperty(str, if_missing=S.Missing)
     identifier = FieldProperty(str)
+    provider = FieldProperty(str)
 
+    first_name = FieldProperty(str)
+    last_name = FieldProperty(str)
+     
     def __init__(self, *args, **kwargs):
         self.identifier = self.find_identifier(**kwargs)
+        self.provider = kwargs.get('providerName')
 
     @classmethod
     def find(cls, *arg, **kwargs):
@@ -40,7 +53,6 @@ class User(MappedClass):
 
         profile = kwargs.get('profile')
         provider = kwargs.get('providerName') or profile.get('providerName')
-        providers = ['Twitter', 'Google', 'Facebook']
         if provider in providers:
             return md5(profile.get('identifier')).hexdigest()
         else:

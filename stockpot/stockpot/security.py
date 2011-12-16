@@ -23,3 +23,10 @@ class RequestWithAttributes(Request):
             return M.User.query.get(_id=userid)
         return None
 
+    @reify
+    def userid(self):
+        if self.user:
+            return str(self.user._id)
+        else:
+            return None
+
