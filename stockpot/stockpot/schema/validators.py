@@ -1,0 +1,36 @@
+from formencode import Invalid
+from formencode import validators as v
+
+from sqlalchemy.orm.exc import NoResultFound
+
+import stockpot.models as M
+
+class ValidUser(v.FancyValidator):
+    def validate_python(self, values, c):
+        login, password = values['login'], values['password']
+        print login, password
+        user = M.User.authenticate(login, password)
+        if not user:
+            error = 'Invalid email and/or password.'
+            raise Invalid(error, values, c, error_dict=dict(email=error))
+        else:
+            values['userid'] = user._id
+
+class UniqueEmail(v.FancyValidator):
+    def validate_python(self, values, c):
+        user = M.User.query.get(email=values['email'])
+        if not user:
+            pass
+        else:
+            error = 'This email address is already in use.'
+            raise Invalid(error, values, c, error_dict=dict(email=error))
+
+class UniqueUsername(v.FancyValidator):
+    def validate_python(self, values, c):
+        user = M.User.query.get(username=values['username'])
+        if not user:
+            pass
+        else:
+            error = 'This username is already in use.'
+            raise Invalid(error, values, c, error_dict=dict(username=error))
+

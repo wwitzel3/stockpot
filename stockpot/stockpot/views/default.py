@@ -1,42 +1,58 @@
-try:
-    import cPickle as pickle
-except ImportError:
-    import pickle
-
 from pyramid.httpexceptions import HTTPFound
 from pyramid.httpexceptions import HTTPForbidden
+from pyramid.renderers import render
 from pyramid.security import forget
 from pyramid.security import remember
 from pyramid.security import unauthenticated_userid
 from pyramid.view import view_config
 from pyramid.url import route_url
 
+from formencode import Invalid
+from formencode import htmlfill
+
 import stockpot.models as M
+import stockpot.schema as S
 
 @view_config(route_name='index', renderer='default/index.mako')
 def index(request):
     return dict(userid=unauthenticated_userid(request))
 
-@view_config(route_name='login', request_param='token')
+@view_config(route_name='login', renderer='default/login.mako')
 def login(request):
-    token = request.params.get('token')
-    storage = M.Velruse.query.get(key=token)
-    values = pickle.loads(storage.value)
-    user = M.User.find(**values)
+    login_form = render('stockpot:templates/widgets/login.mako', {},
+            request=request)
+    signup_form = render('stockpot:templates/widgets/signup.mako', {},
+            request=request)
 
-    if not user:
-        user = M.User(**values)
-        M.DBSession.flush()
+    print request.params
+    if 'form.login' in request.params:
+        try:
+            clean_data = S.UserLoginSchema().to_python(request.params)
+            user = M.User.query.get(_id=clean_data.get('userid'))
+            headers = remember(request, user.id)
+            return HTTPFound(location=route_url('user.profile', request,
+                             username=user.username), headers=headers)
+        except Invalid, e:
+            e.value['password'] = ''
+            login_form = htmlfill.render(login_form, e.value, e.error_dict or {})
 
-    userid = str(user._id)
-    headers = remember(request, str(user._id))
-
-    if user.username:
-        return HTTPFound(location=route_url('index', request),
-                         headers=headers)
-    else:
-        return HTTPFound(location=route_url('user.profile', request,
-                         userid=userid), headers=headers)
+    elif 'form.signup' in request.params:
+        try:
+            clean_data = S.UserSignupSchema().to_python(request.params)
+        except Invalid, e:
+            e.value['password'] = ''
+            e.value['password_verify'] = ''
+            signup_form = htmlfill.render(signup_form, e.value, e.error_dict or {})
+        else:
+            user = M.User(**request.params)
+            M.DBSession.flush()
+            headers = remember(request, user.id)
+            return HTTPFound(location=route_url('user.profile', request,
+                             username=user.username), headers=headers)
+    return dict(
+        signup_form=signup_form,
+        login_form=login_form
+    )
 
 @view_config(route_name='logout')
 def logout(request):

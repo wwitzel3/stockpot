@@ -22,12 +22,12 @@
 			<div class="container">
 				<a class="brand" href="#">Cookbook</a>
 				<ul class="nav">
-					<li class="active"><a href="#">Home</a></li>
+					<li class="active"><a href="${request.route_url('index')}">Home</a></li>
 					<li><a href="#about">About</a></li>
 					% if request.user:
 					<li><a href="${request.route_url('logout')}">Logout</a></li>
 					% else:
-					<li><a href="#signup">Signup</a></li>
+					<li><a href="${request.route_url('login')}">Login</a></li>
 					% endif
 				</ul>
 			</div>

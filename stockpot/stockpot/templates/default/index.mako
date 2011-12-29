@@ -26,32 +26,20 @@
 				</ul>
 			</div>
 			<div class="span-one-third">
-			%if userid:
+			%if request.user:
 				<h2>Get Started!</h2>
 				<ul>
-					<li><a href="${request.route_url('user.profile', userid=userid)}">Update profile</a></li>
+					<li><a href="${request.route_url('user.profile', username=request.user.username)}">Update profile</a></li>
 					<li>Create a cookbook</li>
-					<li>Add recipes</li>
+					<li><a href="${request.route_url('recipe.add')}">Add recipes</a></li>
 					<li>Invite friends</li>
 				</ul>
 			%else:
-				<h2>Signup</h2>
-				<p>Signing up is easy, use your existing Google, Twitter, or Facebook account.</p>
-			<form action="/velruse/google/auth" method="post">
-				<input type="hidden" name="popup_mode" value="popup" />
-				<input type="hidden" name="end_point" value="http://communitycookbook.net:6543/login" />
-				<input type="submit" value="Login with Google" />
-			</form>
-
-			<form action="/velruse/facebook/auth" method="post">
-			<input type="hidden" name="end_point" value="http://communitycookbook.net:6543/login" />
-			<input type="hidden" name="scope" value="publish_stream,create_event" />
-			<input type="submit" value="Login with Facebook" />
-			</form>
-
-			<form action="/velruse/twitter/auth" method="post">
-			<input type="hidden" name="end_point" value="http://communitycookbook.net:6543/login" />
-			<input type="submit" value="Login with Twitter" />
+				<h2>Sign Up</h2>
+				<p>Signing up is easy, just fill out a small form you your free account will be
+				created instantly for you.</p>
+			<form action="${request.route_url('login')}" method="GET">
+			<input type="submit" class="btn primary" value="Sign Up" />
 			</form>
 			
 			%endif
