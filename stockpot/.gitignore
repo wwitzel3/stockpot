@@ -18,3 +18,4 @@ docs/_build/*
 data/*
 data
 production.ini
+.DS_Store

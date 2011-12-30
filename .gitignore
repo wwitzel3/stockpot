@@ -17,3 +17,4 @@ docs/_build/*
 CONFIG.yaml
 *.ini
 *.swp
+.DS_Store

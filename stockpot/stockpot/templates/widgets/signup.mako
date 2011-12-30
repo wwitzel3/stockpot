@@ -35,3 +35,18 @@
 </div>
 </fieldset>
 </form>
+
+<br/>
+
+			<form name="facebook" action="/velruse/facebook/auth" method="post">
+			<input type="hidden" name="end_point" value="http://communitycookbook.net:6543/login" />
+			<input type="hidden" name="scope" value="publish_stream,create_event" />
+			</form>
+
+			<form name="twitter" action="/velruse/twitter/auth" method="post">
+			<input type="hidden" name="end_point" value="http://communitycookbook.net:6543/login" />
+			</form>
+
+<a class="fb-button" href="javascript:document.facebook.submit();">&nbsp;</a>
+<br/>
+<a class="twitter-button" href="javascript:document.twitter.submit();">&nbsp;</a>

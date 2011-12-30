@@ -1,3 +1,8 @@
+try:
+    import cPickle as pickle
+except ImportError:
+    import pickle
+
 from pyramid.httpexceptions import HTTPFound
 from pyramid.httpexceptions import HTTPForbidden
 from pyramid.renderers import render
@@ -49,6 +54,17 @@ def login(request):
             headers = remember(request, user.id)
             return HTTPFound(location=route_url('user.profile', request,
                              username=user.username), headers=headers)
+    elif 'token' in request.params:
+        token = request.params.get('token')
+        storage = M.Velruse.query.get(key=token)
+        values = pickle.loads(storage.value)
+        user = M.User.social(**values)
+        if user:
+            M.DBSession.flush()
+            headers = remember(request, user.id)
+            return HTTPFound(location=route_url('user.profile', request,
+                username=user.username), headers=headers)
+
     return dict(
         signup_form=signup_form,
         login_form=login_form
