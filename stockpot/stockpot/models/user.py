@@ -56,7 +56,6 @@ class User(MappedClass):
 
     @classmethod
     def social(cls, *args, **kwargs):
-        print kwargs
         if not kwargs.get('status') == 'ok':
             raise HTTPForbidden
 

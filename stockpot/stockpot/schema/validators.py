@@ -8,7 +8,6 @@ import stockpot.models as M
 class ValidUser(v.FancyValidator):
     def validate_python(self, values, c):
         login, password = values['login'], values['password']
-        print login, password
         user = M.User.authenticate(login, password)
         if not user:
             error = 'Invalid email and/or password.'
