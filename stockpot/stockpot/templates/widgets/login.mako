@@ -1,3 +1,21 @@
+<div class="row">
+<div class="span8">
+<form name="facebook" action="/velruse/facebook/auth" method="post">
+<input type="hidden" name="end_point" value="http://communitycookbook.net:6543/login" />
+<input type="hidden" name="scope" value="publish_stream,read_friendlists,email" />
+</form>
+<a class="fb-button" href="javascript:document.facebook.submit();">&nbsp;</a>
+</div>
+<div class="span8">
+<form name="twitter" action="/velruse/twitter/auth" method="post">
+<input type="hidden" name="end_point" value="http://communitycookbook.net:6543/login" />
+</form>
+<a class="twitter-button" href="javascript:document.twitter.submit();">&nbsp;</a>
+</div>
+</div>
+
+<div class="row">
+<div class="span16">
 <form name='login' action='${request.route_url('login')}' class='form-stacked' method='post'>
 <fieldset>
 <legend>Already have an account?</legend>
@@ -20,3 +38,6 @@
 </div>
 </fieldset>
 </form>
+</div>
+</div>
+

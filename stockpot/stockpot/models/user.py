@@ -50,6 +50,10 @@ class User(MappedClass):
                     str(self.signup_date))
         self.email = kwargs.get('email', '{0}@example.com'.format(self.username))
 
+    def update(self, *args, **kwargs):
+        for k,v in kwargs.items():
+            setattr(self, k, v)
+
     @classmethod
     def social(cls, *args, **kwargs):
         print kwargs
@@ -98,6 +102,9 @@ class User(MappedClass):
         provider = profile.get('providerName')
         if provider == 'Facebook':
             self.facebook_id = profile.get('preferredUsername')
+            email = profile.get('verifiedEmail')
+            if not self.query.get(email=email):
+                self.email = profile.get('verifiedEmail')
             self.facebook_auth_token = credentials.get('oauthAccessToken')
         elif provider == 'Twitter':
             self.twitter_id = profile.get('displayName')[0]

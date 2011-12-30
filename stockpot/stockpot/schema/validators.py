@@ -17,18 +17,22 @@ class ValidUser(v.FancyValidator):
             values['userid'] = user._id
 
 class UniqueEmail(v.FancyValidator):
+    def __init__(self, user=None):
+        self.user = user
     def validate_python(self, values, c):
         user = M.User.query.get(email=values['email'])
-        if not user:
+        if not user or user.email == self.user.email:
             pass
         else:
             error = 'This email address is already in use.'
             raise Invalid(error, values, c, error_dict=dict(email=error))
 
 class UniqueUsername(v.FancyValidator):
+    def __init__(self, user=None):
+        self.user = user
     def validate_python(self, values, c):
         user = M.User.query.get(username=values['username'])
-        if not user:
+        if not user or user.username == self.user.username:
             pass
         else:
             error = 'This username is already in use.'

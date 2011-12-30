@@ -6,6 +6,26 @@ from .validators import UniqueEmail
 from .validators import UniqueUsername
 from .validators import ValidUser
 
+class UserUpdateSchema(Schema):
+    '''
+    Validate the user update form. Works with UniqueEmail
+    to ensure no two users can have the same email address.
+    '''
+    def __init__(self, user):
+        self._user = user
+
+        self.allow_extra_fields = True
+        self.username = v.String(not_empty=True)
+        self.email = v.Email(resolve_domain=False, not_empty=True)
+        self.password = v.String(if_missing=None)
+        self.password_verify = v.String(if_missing=None)
+
+        self.chained_validators = [
+            v.FieldsMatch('password', 'password_verify'),
+            UniqueEmail(self._user),
+            UniqueUsername(self._user),
+        ]
+
 class UserLoginSchema(Schema):
     allow_extra_fields = True
     login = v.String(not_empty=True)
@@ -32,14 +52,3 @@ class UserSignupSchema(Schema):
         UniqueUsername(),
     ]
 
-
-class UserEditSchema(UserSignupSchema):
-    '''
-    Adds some extra fields and changes the validation conditions
-    of UserSignupForm, this is for when users are editing their profile
-    '''
-    allow_extra_fields = True
-    userid = v.Int()
-    notifications = v.Bool()
-    password = v.String(if_missing=None)
-    password_config = v.String(if_missing=None)
