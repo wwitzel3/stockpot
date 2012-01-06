@@ -4,7 +4,7 @@ from string import ascii_letters, digits
 from random import choice
 
 from ming import schema as S
-from ming.orm import FieldProperty, FieldPropertyWithMissingNone
+from ming.orm import FieldProperty
 from ming.orm.declarative import MappedClass
 
 from pyramid.httpexceptions import HTTPForbidden

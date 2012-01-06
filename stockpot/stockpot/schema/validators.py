@@ -1,8 +1,6 @@
 from formencode import Invalid
 from formencode import validators as v
 
-from sqlalchemy.orm.exc import NoResultFound
-
 import stockpot.models as M
 
 class ValidUser(v.FancyValidator):

@@ -29,7 +29,6 @@ def login(request):
     signup_form = render('stockpot:templates/widgets/signup.mako', {},
             request=request)
 
-    print request.params
     if 'form.login' in request.params:
         try:
             clean_data = S.UserLoginSchema().to_python(request.params)
