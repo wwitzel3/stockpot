@@ -24,6 +24,8 @@ requires = [
 tests_require = [
     'WebTest',
     'mock',
+    'nose',
+    'coverage',
     ]
 
 setup(name='stockpot',

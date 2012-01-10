@@ -52,6 +52,8 @@ class User(MappedClass):
 
     def update(self, *args, **kwargs):
         for k,v in kwargs.items():
+            if k == 'password':
+                v = User.generate_password(v, str(self.signup_date))
             setattr(self, k, v)
 
     @classmethod
