@@ -1,7 +1,4 @@
-try:
-    import cPickle as pickle
-except ImportError:
-    import pickle
+from velruse.store.sqlstore import KeyStorage
 
 from pyramid.httpexceptions import HTTPFound
 from pyramid.httpexceptions import HTTPForbidden
@@ -11,6 +8,8 @@ from pyramid.security import remember
 from pyramid.security import unauthenticated_userid
 from pyramid.view import view_config
 from pyramid.url import route_url
+
+import json
 
 from formencode import Invalid
 from formencode import htmlfill
@@ -49,16 +48,18 @@ def login(request):
             signup_form = htmlfill.render(signup_form, e.value, e.error_dict or {})
         else:
             user = M.User(**request.params)
+            M.DBSession.add(user)
             M.DBSession.flush()
             headers = remember(request, user.id)
             return HTTPFound(location=route_url('user.profile', request,
                              username=user.username), headers=headers)
     elif 'token' in request.params:
-        token = request.params.get('token')
-        storage = M.Velruse.query.get(key=token)
-        values = pickle.loads(storage.value)
+        key = request.params.get('token')
+        storage = M.DBSession.query(KeyStorage).get(key)
+        values = json.loads(storage.value)
         user = M.User.social(**values)
         if user:
+            M.DBSession.add(user)
             M.DBSession.flush()
             headers = remember(request, user.id)
             return HTTPFound(location=route_url('user.profile', request,

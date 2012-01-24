@@ -13,7 +13,7 @@ import stockpot.schema as S
 @view_config(route_name='user.profile', renderer='user/profile.mako',
              request_method='GET')
 def profile(request):
-    user = M.User.query.get(**request.matchdict)
+    user = request.db.query(M.User).filter_by(**request.matchdict).one()
     if not user:
         raise HTTPNotFound
     update_form = render('stockpot:templates/widgets/user/update.mako',
@@ -23,11 +23,11 @@ def profile(request):
 @view_config(route_name='user.profile',  renderer='user/profile.mako',
              request_method='POST')
 def profile_update(request):
-    user = M.User.query.get(**request.matchdict)
+    user = request.db.query(M.User).filter_by(**request.matchdict).one()
     try:
         clean_data = S.UserUpdateSchema(user=user).to_python(request.params)
         user.update(**clean_data)
-        M.DBSession.flush()
+        request.db.flush()
         return HTTPFound(location=route_url('user.profile', request,
                      username=user.username))
     except Invalid, e:

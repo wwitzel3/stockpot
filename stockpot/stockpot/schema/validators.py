@@ -17,7 +17,7 @@ class UniqueEmail(v.FancyValidator):
     def __init__(self, user=None):
         self.user = user
     def validate_python(self, values, c):
-        user = M.User.query.get(email=values['email'])
+        user = M.DBSession.query(M.User).filter_by(email=values['email']).first()
         if not user or user.email == self.user.email:
             pass
         else:
@@ -28,7 +28,7 @@ class UniqueUsername(v.FancyValidator):
     def __init__(self, user=None):
         self.user = user
     def validate_python(self, values, c):
-        user = M.User.query.get(username=values['username'])
+        user = M.DBSession.query(M.User).filter_by(username=values['username']).first()
         if not user or user.username == self.user.username:
             pass
         else:

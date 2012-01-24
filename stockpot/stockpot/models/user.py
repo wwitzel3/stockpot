@@ -3,13 +3,15 @@ from datetime import datetime
 from string import ascii_letters, digits
 from random import choice
 
-from ming import schema as S
-from ming.orm import FieldProperty
-from ming.orm.declarative import MappedClass
-
 from pyramid.httpexceptions import HTTPForbidden
 
-from stockpot.models import DBSession
+from sqlalchemy import (
+    Column, Integer, Text,
+    String, DateTime,
+    )
+from sqlalchemy.orm.exc import NoResultFound
+
+from stockpot.models import Base, DBSession
 
 # If you change this AFTER a user signed up they will not be able to
 # login until they perform a password reset.
@@ -17,30 +19,23 @@ SALT = 'supersecretsalt'
 CHARS = ascii_letters + digits
 MAX_TRIES = 100
 
-class User(MappedClass):
-    class __mongometa__:
-        session = DBSession
-        name = 'users'
-        custom_indexes = [
-                dict(fields=('email',), unique=True, sparse=False),
-                dict(fields=('username',), unique=True, sparse=False),
-                dict(fields=('identifier',), unique=True, sparse=False),
-        ]
+class User(Base):
+    __tablename__ = 'users'
 
-    _id = FieldProperty(S.ObjectId)
-    username = FieldProperty(str)
-    email = FieldProperty(str)
-    password = FieldProperty(str, if_missing=S.Missing)
-    signup_date = FieldProperty(datetime, if_missing=datetime.utcnow())
+    id = Column(Integer, primary_key=True)
+    username = Column(Text, unique=True, index=True)
+    email = Column(Text, unique=True)
+    password = Column(String)
+    signup_date = Column(DateTime, nullable=False, default=datetime.utcnow())
 
-    identifier = FieldProperty(str)
-   
-    twitter_id = FieldProperty(str)
-    twitter_auth_token = FieldProperty(str)
-    twitter_auth_secret = FieldProperty(str)
+    identifier = Column(String, unique=True)
 
-    facebook_id = FieldProperty(str)
-    facebook_auth_token = FieldProperty(str)
+    twitter_id = Column(String, unique=True)
+    twitter_auth_token = Column(String, unique=True)
+    twitter_auth_secret = Column(String, unique=True)
+
+    facebook_id = Column(String, unique=True)
+    facebook_auth_token = Column(String, unique=True) 
 
     def __init__(self, *args, **kwargs):
         self.signup_date = datetime.utcnow().replace(microsecond=0)
@@ -58,36 +53,37 @@ class User(MappedClass):
 
     @classmethod
     def social(cls, *args, **kwargs):
-        if not kwargs.get('status') == 'ok':
-            raise HTTPForbidden
-
         # Grab out passed in values from end_point callback
         profile = kwargs.get('profile')
-        provider = profile.get('providerName')
+        provider = profile.get('accounts')[0]
         credentials = kwargs.get('credentials')
-        identifier = sha1(profile.get('identifier') + SALT).hexdigest()
+        identifier = sha1(provider.get('userid') + SALT).hexdigest()
 
         # Check if we already have a user with that identity?
-        user = cls.query.get(identifier=identifier)
-        if user:
+        try:
+            user = DBSession.query(cls).filter(cls.identifier==identifier).one()
             user.update_social_tokens(profile, credentials)
             return user
+        except NoResultFound:
+             pass
 
         # Get the username depending on the provider
-        if provider == 'Facebook':
+        if provider.get('domain') == 'facebook.com':
             username = profile.get('preferredUsername', None)
-        elif provider == 'Twitter':
-            username = profile.get('displayName', [None])[0]
+        elif provider.get('domain') == 'twitter.com':
+            username = profile.get('displayName', None)
 
         # Ensure the username is unique
         tries = 0
         while tries < MAX_TRIES:
             if not username:
                 username = User.random_username(_range=7)
-            if username and cls.query.get(username=username):
-                username = username + User.random_username(_range=3, prefix='_')
-            if username and not cls.query.get(username=username):
-                break
+            if username:
+                try:
+                    DBSession.query(cls).filter(cls.username==username).one()
+                    username = username + User.random_username(_range=3, prefix='_')
+                except NoResultFound:
+                    break
             tries += 1
         else:
             raise HTTPForbidden
@@ -100,17 +96,17 @@ class User(MappedClass):
         return user
 
     def update_social_tokens(self, profile, credentials):
-        provider = profile.get('providerName')
-        if provider == 'Facebook':
+        provider = profile.get('accounts')[0]
+        if provider.get('domain') == 'facebook.com':
             self.facebook_id = profile.get('preferredUsername')
             email = profile.get('verifiedEmail')
-            if not self.query.get(email=email):
+            if not DBSession.query(User).filter_by(email=email).count():
                 self.email = profile.get('verifiedEmail')
             self.facebook_auth_token = credentials.get('oauthAccessToken')
-        elif provider == 'Twitter':
-            self.twitter_id = profile.get('displayName')[0]
-            self.twitter_auth_token = credentials.get('oauthAccessToken')[0]
-            self.twitter_auth_secret = credentials.get('oauthAccessTokenSecret')[0]
+        elif provider.get('domain') == 'twitter.com':
+            self.twitter_id = profile.get('displayName')
+            self.twitter_auth_token = credentials.get('oauthAccessToken')
+            self.twitter_auth_secret = credentials.get('oauthAccessTokenSecret')
 
     @classmethod
     def authenticate(cls, login, password):
@@ -130,9 +126,5 @@ class User(MappedClass):
     @staticmethod
     def random_username(_range=5, prefix=''):
         return prefix + ''.join([choice(CHARS) for i in range(_range)])
-
-    @S.LazyProperty
-    def id(self):
-        return str(self._id)
 
 

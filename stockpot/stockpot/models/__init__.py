@@ -1,31 +1,32 @@
-from ming import Session
-from ming.datastore import DataStore
-from ming.orm import ThreadLocalORMSession
-from ming.orm import Mapper
+import transaction
 
-session = Session()
-DBSession = ThreadLocalORMSession(session)
+from sqlalchemy.orm import scoped_session
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.ext.declarative import declarative_base
 
-def init_mongo(engine):
-    server, database = engine
-    datastore = DataStore(server, database=database)
-    session.bind = datastore
-    Mapper.compile_all()
+from zope.sqlalchemy import ZopeTransactionExtension
+from velruse.store.sqlstore import SQLBase
 
-    for mapper in Mapper.all_mappers():
-        session.ensure_indexes(mapper.collection)
-    DBSession.flush()
-    DBSession.close_all()
+DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
+Base = declarative_base()
+
+def initialize_sql(engine):
+    DBSession.configure(bind=engine)
+    Base.metadata.bind = engine
+    Base.metadata.create_all(engine)
+    SQLBase.metadata.bind = engine
+    SQLBase.metadata.create_all(engine)
+
+    return DBSession
 
 # Database includes here allow for a simple programming API convention. By importing all the models here
 # we can use the import models as M convention throughout the rest of the code.
-from .velruse import Velruse
 from .user import User
 
 # Explicit is better.
 __all__ = [
     'DBSession',
-    'init_mongo',
+    'initialize_sql',
     'Velruse',
     'User',
 ]
