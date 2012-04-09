@@ -2,6 +2,7 @@ import os
 import sys
 import transaction
 
+from pyramid.security import ALL_PERMISSIONS
 from sqlalchemy import engine_from_config
 
 from pyramid.paster import (
@@ -9,11 +10,19 @@ from pyramid.paster import (
     setup_logging,
     )
 
-from ..models import (
+from stockpot.models import (
     DBSession,
-    MyModel,
     Base,
+    Group,
     )
+
+SITE_ACL = [
+    ['Allow', 'system.Everyone', ['view']],
+    ['Allow', 'role:viewer', ['view']],
+    ['Allow', 'role:editor', ['view', 'add', 'edit']],
+    ['Allow', 'role:owner', ['view', 'add', 'edit', 'manage']],
+    ['Allow', 'role:admin', ALL_PERMISSIONS],
+]
 
 def usage(argv):
     cmd = os.path.basename(argv[0])
@@ -31,5 +40,6 @@ def main(argv=sys.argv):
     DBSession.configure(bind=engine)
     Base.metadata.create_all(engine)
     with transaction.manager:
-        model = MyModel(name='one', value=1)
-        DBSession.add(model)
+        for ace in SITE_ACL:
+            DBSession.add(Group(ace[1]))
+
