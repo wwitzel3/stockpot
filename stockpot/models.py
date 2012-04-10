@@ -83,6 +83,11 @@ class User(Base):
         else:
             return None
 
+    @property
+    def __acl__(self):
+        return [
+            ('Allow', 'owner:{0}'.format(self.user.id), ('add', 'edit'))
+        ]
 
 user_group_table = Table('user_group', Base.metadata,
     Column('user_id', Integer, ForeignKey(User.id)),

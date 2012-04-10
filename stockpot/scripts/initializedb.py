@@ -14,6 +14,7 @@ from stockpot.models import (
     DBSession,
     Base,
     Group,
+    User,
     )
 
 SITE_ACL = [
@@ -40,6 +41,11 @@ def main(argv=sys.argv):
     DBSession.configure(bind=engine)
     Base.metadata.create_all(engine)
     with transaction.manager:
+        user = User(email='nobody@example.com', password='password', username='admin')
         for ace in SITE_ACL:
             DBSession.add(Group(ace[1]))
+        DBSession.flush()
+        group = DBSession.query(Group).filter_by(name='role:admin').one()
+        user.groups.add(group)
+        DBSession.add(user)
 
