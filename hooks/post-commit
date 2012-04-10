@@ -1,0 +1,3 @@
+#!/bin/sh
+wget -q --post-data='' http://readthedocs.org/build/3069 -O /dev/null
+echo "Updating http://readthedocs.org/docs/stockpot/en/latest/"
