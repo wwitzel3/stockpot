@@ -16,11 +16,11 @@ class TestUserViews(UnitTestBase):
 
     def test_login_success(self):
         from stockpot.views.default import login_view
-        from stockpot.models import User
+        from stockpot.models.user import User
 
-        user = User(email='nobody@example.com',
-                    password='password',
-                    username='username')
+        user = User(email=u'nobody@example.com',
+                    password=u'password',
+                    username=u'username')
         self.session.add(user)
         self.session.flush()
 
@@ -28,8 +28,8 @@ class TestUserViews(UnitTestBase):
 
         request = testing.DummyRequest(post={
             'form.auth':True,
-            'email':'nobody@example.com',
-            'password':'password'
+            'email':u'nobody@example.com',
+            'password':u'password'
         })
 
         view = login_view(request)

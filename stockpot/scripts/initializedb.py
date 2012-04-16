@@ -13,8 +13,11 @@ from pyramid.paster import (
 from stockpot.models import (
     DBSession,
     Base,
-    Group,
+    )
+
+from stockpot.models.user import (
     User,
+    Group,
     )
 
 SITE_ACL = [

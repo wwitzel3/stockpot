@@ -1,3 +1,8 @@
+from stockpot.models import (
+    DBSession,
+    Base,
+)
+
 import cryptacular.bcrypt
 
 from sqlalchemy import (
@@ -8,11 +13,7 @@ from sqlalchemy import (
     Table,
     )
 
-from sqlalchemy.ext.declarative import declarative_base
-
 from sqlalchemy.orm import (
-    scoped_session,
-    sessionmaker,
     synonym,
     relationship,
     )
@@ -21,10 +22,6 @@ from sqlalchemy.orm.exc import (
     NoResultFound,
     )
 
-from zope.sqlalchemy import ZopeTransactionExtension
-
-DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
-Base = declarative_base()
 crypt = cryptacular.bcrypt.BCRYPTPasswordManager()
 
 def hash_password(password):

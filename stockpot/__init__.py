@@ -7,7 +7,7 @@ from pyramid.security import unauthenticated_userid
 from sqlalchemy import engine_from_config
 
 from .models import DBSession
-from .models import User
+from .models.user import User
 
 from .security import groupfinder
 from .views.user import user_routes

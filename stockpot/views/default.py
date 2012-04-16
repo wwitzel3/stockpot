@@ -17,8 +17,8 @@ from pyramid.url import route_url
 from velruse import login_url
 from colander import Invalid
 
-from stockpot.models import (
-    DBSession,
+from stockpot.models import DBSession
+from stockpot.models.user import (
     User,
     Group,
     )

@@ -1,8 +1,6 @@
 from pyramid.security import ALL_PERMISSIONS
-from .models import (
-    DBSession,
-    User,
-    )
+from .models import DBSession
+from .models.user import User
 
 SITE_ACL = [
     ['Allow', 'system.Everyone', ['view']],
